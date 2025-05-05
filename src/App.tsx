@@ -11,9 +11,19 @@ type TypeListProps = {
   date: string;
 };
 
+function DateTimePretty(Component: React.ComponentType<{ date: string }>) {
+  return function ComponentWrapped({ date }: { date: string }) {
+    const relative = dayjs(date).fromNow();
+
+    return <Component date={relative} />;
+  };
+}
+
 function DateTime({ date }: { date: string }) {
   return <p className="date">{date}</p>;
 }
+
+const PrettyDateTime = DateTimePretty(DateTime);
 
 function Video(props: TypeListProps) {
   return (
@@ -24,16 +34,16 @@ function Video(props: TypeListProps) {
         allow="autoplay; encrypted-media"
         allowFullScreen
       ></iframe>
-      <DateTime date={props.date} />
+      <PrettyDateTime date={props.date} />
     </div>
   );
 }
 
 function VideoList({ list }: { list: TypeListProps[] }) {
   return list.map((item) => {
-    const relative = dayjs(item.date).fromNow();
+    // const relative = dayjs(item.date).fromNow();
 
-    return <Video url={item.url} date={relative} />;
+    return <Video url={item.url} date={item.date} />;
   });
 }
 
